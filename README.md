@@ -1,7 +1,7 @@
 # DocuConvert Pro
 
 ## 项目介绍
-DocuConvert Pro 是一款功能强大的文档转换工具，专注于将PDF、图片等文档格式转换为Markdown，同时支持Markdown文件转换为Word、HTML等常用格式。该工具利用OCR技术提取图像和PDF中的文本内容，并通过Pandoc实现高质量的文档格式转换。
+DocuConvert Pro 是一款功能强大的文档转换工具，专注于将PDF、图片等文档格式转换为Markdown，同时支持Markdown文件转换为Word、HTML等常用格式。该工具利用 PaddleOCR_VL API 调用来提取图片和PDF中的文本、表格、插图等内容，并通过Pandoc实现高质量的文档格式转换。
 
 ## 功能特性
 
