@@ -28,7 +28,7 @@ DocuConvert Pro 是一款功能强大的文档转换工具，专注于将PDF、�
 ## 系统要求
 
 - **操作系统**：Windows 10/11
-- **.NET Framework**：.NET 10.0
+- **.NET Framework**：.NET 10.0 - [下载地址](https://dotnet.microsoft.com/zh-cn/download/dotnet/10.0)
 - **内存**：建议 4GB 或以上
 - **硬盘空间**：至少 200MB 可用空间
 - **依赖软件**：
