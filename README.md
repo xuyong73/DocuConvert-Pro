@@ -23,6 +23,8 @@ DocuConvert Pro 是一款功能强大的文档转换工具，专注于将PDF、�
 - 支持拖放操作，简化文件选择过程
 - 命令行参数支持，便于批处理和自动化操作
 
+![](https://github.com/xuyong73/DocuConvert-Pro/blob/main/Main%20Interface.png)
+
 ## 系统要求
 
 - **操作系统**：Windows 10/11
