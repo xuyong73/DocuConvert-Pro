@@ -1,5 +1,8 @@
+using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace DocuConvert_Pro.Services
 {
@@ -33,16 +36,21 @@ namespace DocuConvert_Pro.Services
             {
                 var processedFilePath = await PreprocessMarkdownFileAsync(inputFilePath);
 
-                // 为了让 pandoc 正确解析相对资源（图片、链接等），将工作目录设置为处理后 Markdown 的目录，
-                // 并传入文件名（basename）。同时对 docx 使用与 Python 实现一致的参数。
+                // 为了让 pandoc 正确解析相对资源（图片、链接等），将工作目录设置为处理后 Markdown 的目录，并传入文件名（basename）。
                 var processedDir = Path.GetDirectoryName(processedFilePath) ?? Environment.CurrentDirectory;
                 var processedBaseName = Path.GetFileName(processedFilePath);
 
                 string arguments;
                 if (format.Equals("docx", StringComparison.OrdinalIgnoreCase))
                 {
-                    // 使用与 Python 脚本相同的参数：-f markdown+tex_math_dollars -t docx --mathml -o out infile
                     arguments = $"-f markdown+tex_math_dollars -t docx --mathml -o \"{outputFilePath}\" \"{processedBaseName}\"";
+
+                    // 加载Word模板文件
+                    var templateFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reference.docx");
+                    if (File.Exists(templateFilePath))
+                    {
+                        arguments += $" --reference-doc=\"{templateFilePath}\"";
+                    }
 
                     // resource-path：包含处理后文件目录与原始输入目录（若不同），使用 PATH 分隔符
                     var inputDir = Path.GetDirectoryName(inputFilePath);
@@ -253,7 +261,7 @@ namespace DocuConvert_Pro.Services
             return Regex.Replace(content, imgPattern, m =>
             {
                 var src = m.Groups[1].Value;
-                var alt = string.IsNullOrEmpty(m.Groups[2].Value) ? "图片" : m.Groups[2].Value;
+                var alt = m.Groups[2].Value;
                 var width = m.Groups[3].Value;
                 if (!src.StartsWith("http") && !src.StartsWith("/") && !Path.IsPathRooted(src)) src = "./" + src;
                 var markdownImage = $"![{alt}]({src})";

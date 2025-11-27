@@ -1,5 +1,7 @@
+using System;
+using System.IO;
+using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using DocuConvert_Pro.Forms;
 using DocuConvert_Pro.Services;
 
@@ -12,8 +14,13 @@ namespace DocuConvert_Pro
         {
             ApplicationConfiguration.Initialize();
 
-            var host = CreateHostBuilder().Build();
-            var mainForm = host.Services.GetRequiredService<MainForm>();
+            // 创建服务集合
+            var services = new ServiceCollection();
+            ConfigureServices(services);
+            
+            // 构建服务提供程序
+            var serviceProvider = services.BuildServiceProvider();
+            var mainForm = serviceProvider.GetRequiredService<MainForm>();
 
             // 简化启动逻辑：只在有有效输入文件时才设置参数
             if (args.Length > 0)
@@ -31,25 +38,21 @@ namespace DocuConvert_Pro
             Application.Run(mainForm);
         }
 
-        static IHostBuilder CreateHostBuilder()
+        static void ConfigureServices(IServiceCollection services)
         {
-            return Host.CreateDefaultBuilder()
-                .ConfigureServices((context, services) =>
-                {
-                    // 注册服务 - 使用合并后的服务类
-                    services.AddSingleton<HttpClient>();
-                    services.AddSingleton<ILogService, Services.LogService>();
-                    services.AddSingleton<IConfigService, Services.ConfigService>();
-                    services.AddSingleton<IPaddleOCRService, Services.PaddleOCRService>();
-                    services.AddSingleton<IMDConvService, Services.MDConvServices>();
+            // 注册服务 - 使用合并后的服务类
+            services.AddSingleton<HttpClient>();
+            services.AddSingleton<ILogService, Services.LogService>();
+            services.AddSingleton<IConfigService, Services.ConfigService>();
+            services.AddSingleton<IPaddleOCRService, Services.PaddleOCRService>();
+            services.AddSingleton<IMDConvService, Services.MDConvServices>();
 
-                    // 注册主窗体
-                    services.AddSingleton<MainForm>(provider => new MainForm(
-                        provider.GetRequiredService<IPaddleOCRService>(),
-                        provider.GetRequiredService<ILogService>(),
-                        provider.GetRequiredService<IConfigService>(),
-                        provider.GetRequiredService<IMDConvService>()));
-                });
+            // 注册主窗体
+            services.AddSingleton<MainForm>(provider => new MainForm(
+                provider.GetRequiredService<IPaddleOCRService>(),
+                provider.GetRequiredService<ILogService>(),
+                provider.GetRequiredService<IConfigService>(),
+                provider.GetRequiredService<IMDConvService>()));
         }
     }
 }

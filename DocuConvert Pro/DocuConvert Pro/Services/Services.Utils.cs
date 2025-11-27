@@ -1,4 +1,7 @@
+using System;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DocuConvert_Pro.Services
 {
@@ -170,19 +173,4 @@ namespace DocuConvert_Pro.Services
     }
 }
 
-namespace DocuConvert_Pro.Services.Exceptions
-{
-    public class ApiAuthenticationException : Exception
-    {
-        public int StatusCode { get; }
-        public ApiAuthenticationException(int statusCode, string message) : base(message)
-        {
-            StatusCode = statusCode;
-        }
-    }
 
-    public class ApiFinalException : Exception
-    {
-        public ApiFinalException(string message) : base(message) { }
-    }
-}

@@ -237,7 +237,7 @@ namespace DocuConvert_Pro.Forms
             MinimumSize = new Size(600, 500);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "文件OCR转换工具 v2.5";
+            Text = "文件OCR转换工具 v2.8";
             mainPanel.ResumeLayout(false);
             mainPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)Option).EndInit();

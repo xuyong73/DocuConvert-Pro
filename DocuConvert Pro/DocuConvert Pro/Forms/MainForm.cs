@@ -1,5 +1,6 @@
+using System;
+using System.IO;
 using DocuConvert_Pro.Services;
-using DocuConvert_Pro.Services.Exceptions;
 using System.ComponentModel;
 
 namespace DocuConvert_Pro.Forms
@@ -395,50 +396,8 @@ namespace DocuConvert_Pro.Forms
             catch (AggregateException aggEx)
             {
                 var innerException = aggEx.GetBaseException();
-
-                if (innerException is ApiAuthenticationException authEx)
-                {
-                    e.Result = new ProcessingResult
-                    {
-                        Success = false,
-                        ErrorMessage = authEx.Message,
-                        IsAuthenticationError = true,
-                        StatusCode = authEx.StatusCode
-                    };
-                }
-                else if (innerException is ApiFinalException finalEx)
-                {
-                    e.Result = new ProcessingResult
-                    {
-                        Success = false,
-                        ErrorMessage = finalEx.Message,
-                        IsFinalError = true
-                    };
-                }
-                else
-                {
-                    _logService.LogError($"处理错误: {innerException.Message}");
-                    e.Result = null;
-                }
-            }
-            catch (ApiAuthenticationException authEx)
-            {
-                e.Result = new ProcessingResult
-                {
-                    Success = false,
-                    ErrorMessage = authEx.Message,
-                    IsAuthenticationError = true,
-                    StatusCode = authEx.StatusCode
-                };
-            }
-            catch (ApiFinalException finalEx)
-            {
-                e.Result = new ProcessingResult
-                {
-                    Success = false,
-                    ErrorMessage = finalEx.Message,
-                    IsFinalError = true
-                };
+                _logService.LogError($"处理错误: {innerException.Message}");
+                e.Result = null;
             }
             catch (Exception ex)
             {
@@ -483,6 +442,11 @@ namespace DocuConvert_Pro.Forms
             }
         }
 
+        private string GetTimeInfo(TimeSpan? processingTime)
+        {
+            return processingTime.HasValue ? $"处理文件耗时: {processingTime.Value.TotalSeconds:F2} 秒" : "时间统计不可用";
+        }
+
         private void BackgroundWorker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
         {
             _isProcessing = false;
@@ -509,11 +473,11 @@ namespace DocuConvert_Pro.Forms
                 {
                     if (result.Success)
                     {
-                        var timeInfo = result.ProcessingTime.HasValue ? $"总耗时: {result.ProcessingTime.Value.TotalSeconds:F2} 秒" : "时间统计不可用";
+                        var timeInfo = GetTimeInfo(result.ProcessingTime);
                         var outputPath = result.OutputFilePath ?? "未知路径";
-                        _logService.LogInfo($"处理完成: {outputPath} ({timeInfo})");
+                        _logService.LogInfo($"处理完成({timeInfo})");
                         statusLabel.Text = "处理完成";
-                        MessageBox.Show($"文档处理完成！\n输出文件: {outputPath}\n{timeInfo}", "处理成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show($"处理完成！\n{timeInfo}", "处理成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else if (result.IsFinalError)
                     {
@@ -568,7 +532,7 @@ namespace DocuConvert_Pro.Forms
                 {
                     if (svc.Success)
                     {
-                        var timeInfo = svc.ProcessingTime.HasValue ? $"总耗时: {svc.ProcessingTime.Value.TotalSeconds:F2} 秒" : "时间统计不可用";
+                        var timeInfo = GetTimeInfo(svc.ProcessingTime);
                         var outputPath = svc.OutputFilePath ?? "未知路径";
                         _logService.LogInfo($"处理完成: {outputPath} ({timeInfo})");
                         statusLabel.Text = "处理完成";
@@ -740,10 +704,10 @@ namespace DocuConvert_Pro.Forms
 
                     if (success)
                     {
-                        var timeInfo = $"转换耗时: {processingTime.TotalSeconds:F2} 秒";
+                        var timeInfo = GetTimeInfo(processingTime);
                         _logService.LogInfo($"转换完成 ({timeInfo})");
                         statusLabel.Text = "完成";
-                        MessageBox.Show($"Markdown 文件转换完成！\n{timeInfo}", "转换成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show($"转换完成！\n{timeInfo}", "转换成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
