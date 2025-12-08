@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyTitle>DocuConvert Pro</AssemblyTitle>
+    <AssemblyDescription>PaddleOCR Visual Layout Analysis Tool</AssemblyDescription>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <ApplicationIcon>DocuConvertPro.ico</ApplicationIcon>
+    <!-- 排除项目生成的文件 -->
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <!-- 添加MSBuild目标，在构建完成后删除不需要的文件 -->
+  <Target Name="RemoveUnnecessaryFiles" AfterTargets="Build">
+    <ItemGroup>
+      <FilesToDelete Include="$(OutputPath)DocuConvertProRefactored.deps.json" />
+      <FilesToDelete Include="$(OutputPath)DocuConvertProRefactored.pdb" />
+      <FilesToDelete Include="$(OutputPath)Microsoft.Extensions.Options.dll" />
+      <FilesToDelete Include="$(OutputPath)Microsoft.Extensions.Primitives.dll" />
+      <FilesToDelete Include="$(OutputPath)PdfSharp.BarCodes.dll" />
+      <FilesToDelete Include="$(OutputPath)PdfSharp.Charting.dll" />
+      <FilesToDelete Include="$(OutputPath)PdfSharp.Cryptography.dll" />
+      <FilesToDelete Include="$(OutputPath)PdfSharp.Quality.dll" />
+      <FilesToDelete Include="$(OutputPath)PdfSharp.Snippets.dll" />
+      <FilesToDelete Include="$(OutputPath)PdfSharp.WPFonts.dll" />
+      <FilesToDelete Include="$(OutputPath)Microsoft.Extensions.Logging.dll" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" ContinueOnError="true" />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="PDFsharp" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="reference.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

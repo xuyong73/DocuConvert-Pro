@@ -1,0 +1,48 @@
+<Window x:Class="DocuConvertProRefactored.Views.ConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DocuConvertProRefactored.Views"
+        mc:Ignorable="d"
+        Title="PaddleOCR-VL 配置"
+        Height="250"
+        Width="520"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- 提示信息 -->
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5,5,15" TextWrapping="Wrap" FontSize="14" TextAlignment="Left">
+            <Run Text="请前往百度飞桨平台获取PaddleOCR-VL模型的API配置：" />
+            <LineBreak />
+            <Hyperlink NavigateUri="https://aistudio.baidu.com/paddleocr" RequestNavigate="Hyperlink_RequestNavigate">
+                <Run Text="https://aistudio.baidu.com/paddleocr" Foreground="Blue" TextDecorations="Underline" />
+            </Hyperlink>
+        </TextBlock>
+
+        <!-- API URL -->
+        <Label Grid.Row="1" Grid.Column="0" Content="API URL:" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="Bold" />
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ApiUrl, UpdateSourceTrigger=PropertyChanged}" Margin="5" Height="25" VerticalAlignment="Center" FontSize="14" Padding="3" VerticalContentAlignment="Center" BorderBrush="#FFB3B3B3" BorderThickness="1" Foreground="Black" />
+
+        <!-- Token -->
+        <Label Grid.Row="2" Grid.Column="0" Content="Token:" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="Bold" />
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Token, UpdateSourceTrigger=PropertyChanged}" Margin="5" Height="25" VerticalAlignment="Center" FontSize="14" Padding="3" VerticalContentAlignment="Center" BorderBrush="#FFB3B3B3" BorderThickness="1" Foreground="Black" />
+
+        <!-- 按钮 -->
+        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5,15,5,5">
+            <Button Content="保存" Command="{Binding SaveCommand}" Width="75" Margin="0,0,10,0" Height="28" />
+            <Button Content="取消" Command="{Binding CancelCommand}" Width="75" Height="28" />
+        </StackPanel>
+    </Grid>
+</Window>
